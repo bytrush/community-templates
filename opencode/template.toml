@@ -5,3 +5,5 @@ category = "ai"
 [templates.opencode]
 input_path = 'opencode.json'
 output_path = '$XDG_CONFIG_HOME/opencode/themes/matugen.json'
+post_hook = "bash '{{ config_dir }}/apply.sh' {{ mode }}"
+undo_hook = "bash '{{ config_dir }}/undo.sh'"

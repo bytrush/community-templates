@@ -44,16 +44,10 @@ fi
 
 socket_dir="${TMUX_TMPDIR:-/tmp}/tmux-$(id -u)"
 
+# #{config_files} only lists the file passed to `tmux -f`; wrapper configs
+# (oh-my-zsh, distro defaults, etc.) hide the real tmux.conf. Source the theme
+# into every running server instead, so those setups update too.
 for socket_path in "$socket_dir"/*; do
   [ -S "$socket_path" ] || continue
-
-  config_files="$(
-    tmux -N -S "$socket_path" display-message -p '#{config_files}' 2>/dev/null
-  )" || continue
-
-  case ",$config_files," in
-    *",$config_file,"*)
-      tmux -N -S "$socket_path" source-file "$theme_file"
-      ;;
-  esac
+  tmux -N -S "$socket_path" source-file "$theme_file" 2>/dev/null || true
 done
